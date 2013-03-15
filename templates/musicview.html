@@ -1,0 +1,42 @@
+<div class="row">
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <div class="container">
+			<a class="brand" href="#/">Songchirp</a>
+			<ul class="nav">
+				<li><a href="#/">Home</a></li>
+				<li><a href="#/new">New</a></li>
+				<li class="active"><a href="#/music">Music</a></li>
+				<li><a href="#/about">About</a></li>
+			</ul>
+	    </div>
+	  </div>
+	</div>
+</div>
+<div class="row">
+	<div ng-repeat="music in musicList">
+		<b></b><br/>
+		<a href="#/music/{{music.id}}"><b>[{{music.type}}] {{music.name}}</b></a> 
+		<span>{{music.play_count}} times played</span><br/>
+		<div ng-switch on="music.type" >
+	        <div ng-switch-when="youtube">
+	    		<iframe width="420" height="315" src="http://www.youtube.com/embed/{{music.source}}?autoplay=1" frameborder="0" allowfullscreen></iframe><br/>
+	        </div>
+	        <div ng-switch-when="vimeo">
+	        	<iframe src="http://player.vimeo.com/video/{{music.source}}?autoplay=1" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+	        </div>
+	        <div ng-switch-when="soundcloud">
+	        	<iframe width="100%" height="200" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url={{music.source}}&show_artwork=true&auto_play=true"></iframe>
+	        </div>
+	        <div ng-switch-default>
+	        	<audio src="{{music.source}}" controls="controls" autoplay="autoplay">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+    	</div>
+    	<!--
+    	<a class="btn" href="#/music/delete/{{music.id}}">delete</a>
+    	<a class="btn" href="#/music/next/">Next</a>
+    -->
+	</div>
+</div>

@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <div class="container">
+			<a class="brand" href="#/">Songchirp</a>
+			<ul class="nav">
+				<li><a href="#/">Home</a></li>
+				<li class="active"><a href="#/new">New</a></li>
+				<li><a href="#/music">Music</a></li>
+				<li><a href="#/about">About</a></li>
+			</ul>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+<div class="row">
+	<center>
+	<form ng-submit="submitMusic()">
+		<select name="type" ng-model="musicType" ng-options="musicType for musicType in musicTypes"></select><br/>
+		<input  name="name" type="text" ng-model="musicName" size="30" placeholder="music name..." required ><br/>
+		<textarea name="musicSource" type="text" ng-model="musicSource" placeholder="music link..." required ></textarea><br/>
+		<input class="btn-primary" type="submit" value="add">
+	</form>
+	<br/>
+	{{musicType | json}}<br/>
+	{{musicName | json}}<br/>
+	{{musicSource |json}}<br/>
+	</center>
+</div>
