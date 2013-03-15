@@ -93,15 +93,12 @@ function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 	});
 }
 function MusicNextCtrl($scope, $http, $location) {
-	console.log("next music controller is working");
-	alert("it works");
-	/*$http({
+	$http({
 	    method: 'GET',
 	    url: 'nextMusic'
 	}).success(function (data) {
-		console.log(data[0]["id"])
-		//$location.path('/music/'+data[0]["id"]);
-	});	*/
+		$location.path('/music/'+data[0]["id"]);
+	});	
 }
 
 function AboutCtrl($scope) {

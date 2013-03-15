@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import webapp2, json, logging, random
+import webapp2, json, logging
 from models.models import *
+import random
 
 class AddMusicHandler(webapp2.RequestHandler):
     def post(self):
@@ -29,8 +30,9 @@ class GetMusicListHandler(webapp2.RequestHandler):
     def get(self):
         q = Music.all()
         q.order("-date")
+        fetched = q.fetch(20)
         result = []
-        for p in q.run():
+        for p in fetched:
             result.append({
                 'id':str(p.key().id()),
                 'type':p.sourceType,
@@ -76,7 +78,7 @@ class NextMusicHandler(webapp2.RequestHandler):
         selected_key = None
         n = 0
         for key in query:
-            if ramdom.randint(0, n)==0:
+            if random.randint(0, n)==0:
                 selected_key = key
             n += 1
 

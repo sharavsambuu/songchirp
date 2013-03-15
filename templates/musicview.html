@@ -15,7 +15,7 @@
 </div>
 <div class="row">
 	<div ng-repeat="music in musicList">
-		<b></b><br/>
+		<a class="btn" href="#/next">Next</a><br/>
 		<a href="#/music/{{music.id}}"><b>[{{music.type}}] {{music.name}}</b></a> 
 		<span>{{music.play_count}} times played</span><br/>
 		<div ng-switch on="music.type" >
@@ -36,7 +36,7 @@
     	</div>
     	<!--
     	<a class="btn" href="#/music/delete/{{music.id}}">delete</a>
-    	<a class="btn" href="#/music/next/">Next</a>
-    -->
+    	-->
+    
 	</div>
 </div>
