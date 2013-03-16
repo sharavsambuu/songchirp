@@ -18,9 +18,7 @@
 	Recently added songs <br/>
 	<table class="table table-hover">
 		<tr ng-repeat="music in musicList">
-			<td>
-			<img ng-src="assets/img/{{music.type}}.png"/>
-			</td>
+			<td><img ng-src="assets/img/{{music.type}}.png"/></td>
 			<td><a href="#/music/{{music.id}}"><b>{{music.name}}</b></a></td>
 		    <td>{{music.play_count}}</td>
 		</tr>

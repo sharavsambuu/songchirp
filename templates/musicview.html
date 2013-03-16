@@ -14,9 +14,9 @@
 </div>
 <div class="row">
 	<div ng-repeat="music in musicList">
-		<a class="btn btn-large" href="#/next">Next</a><br/>
-		<a href="#/music/{{music.id}}"><b>[{{music.type}}] {{music.name}}</b></a> 
-		<span>{{music.play_count}} times played</span><br/>
+		<a class="btn btn-large btn-warning" href="#/next"><i class="icon-forward"></i>  Next</a> 
+		<img ng-src="assets/img/{{music.type}}.png"/> <a href="#/music/{{music.id}}"><b> {{music.name}}</b></a> 
+		<span>{{music.play_count}} times played</span><br/><br/>
 		<div ng-switch on="music.type" >
 	        <div ng-switch-when="youtube">
 	        	<iframe width="420" height="315" src="http://www.youtube.com/embed/{{music.source}}?autoplay=1" frameborder="0" allowfullscreen></iframe>

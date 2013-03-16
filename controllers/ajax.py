@@ -3,6 +3,7 @@
 import webapp2, json, logging
 from models.models import *
 import random
+from google.appengine.api import memcache
 
 class AddMusicHandler(webapp2.RequestHandler):
     def post(self):
@@ -47,10 +48,12 @@ class GetMusicListHandler(webapp2.RequestHandler):
 class GetMusicHandler(webapp2.RequestHandler):
     def post(self):
         entity_id= str(self.request.get('id'))
-        logging.warning("incoming ID : %s", entity_id)
-        p = Music.get_by_id(int(entity_id))
+        p = memcache.get(entity_id)
+        if p is None:
+            p = Music.get_by_id(int(entity_id))
         p.play_count += 1
         p.put()
+        memcache.set(str(p.key().id()), p)
         result = []
         result.append({
                 'id':str(p.key().id()),
