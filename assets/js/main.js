@@ -112,7 +112,7 @@ var app = angular.module('songchirp', []);
 angular.module('songchirp', []).
 config(function($routeProvider) {
 	$routeProvider.
-		when('/', {controller:HomeCtrl, templateUrl:'templates/home.html'}).
+		when('/', {controller:MusicCtrl, templateUrl:'templates/music.html'}).
 		when('/new', {controller:CreateCtrl, templateUrl:'templates/new.html'}).
 		when('/music', {controller:MusicCtrl, templateUrl:'templates/music.html'}).
 		when('/music/:id', {controller:MusicViewCtrl, templateUrl:'templates/musicview.html'}).

@@ -1,7 +1,3 @@
-function HomeCtrl($scope){
-
-}
-
 function CreateCtrl($scope, $http, $location) {
 	$scope.musicTypes = [
 		"youtube, soundcloud, vimeo",
