@@ -1,4 +1,16 @@
+/*angular.module("songchirp",[]).
+	factory("autoplayService", function($timeout){
+		var time = {};
+		(function tick() {
+			time.now = new Date().toString();
+			$timeout(tick, 1000);
+		})();
+		return time;
+	});*/
+
+
 function CreateCtrl($scope, $http, $location) {
+	musicInstance = null;
 	$scope.musicTypes = [
 		"youtube, soundcloud, vimeo",
 		"mp3"
@@ -42,13 +54,47 @@ function CreateCtrl($scope, $http, $location) {
 }
 
 function MusicCtrl($scope, $http) {
+	musicInstance = null;
 	$scope.musicList = [];
 	$http.get('getMusicList').success(function(data){
 		$scope.musicList = data;
 	});
 }
 
-function MusicViewCtrl($scope, $routeParams, $http) {
+function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
+	musicInstance = null;
+	shouldPlayMusic = true;
+
+	$scope.onTimeout = function() {
+		
+		if (shouldPlayMusic) {
+			if (musicInstance) {
+				var temp = musicInstance.duration();
+				if (temp){
+					if (temp>0){
+						console.log("we need to play music...");
+						musicInstance.play();
+						shouldPlayMusic = false;			
+					}
+				}
+			}
+		}
+		if (musicInstance) {
+			duration = musicInstance.duration();
+			currentTime = musicInstance.currentTime();
+			if (duration>0&&(duration-currentTime)<0.5) {
+				$location.path('/next');
+			}
+		}
+		document.getElementById("debug").innerHTML = currentTime+" : "+duration
+		
+		myTimeout = $timeout($scope.onTimeout, 3000);
+	}
+	var myTimeout = $timeout($scope.onTimeout, 3000);
+	$scope.stopTimout = function() {
+		$timeout.cancel(myTimeout);
+	}
+
 	$scope.musicList = [];
 	var xsrf = {
 		id: $routeParams.id,
@@ -68,8 +114,49 @@ function MusicViewCtrl($scope, $routeParams, $http) {
 	}).success(function (data) {
 		$scope.musicList = data;
 	});
+
+	$scope.boolYoutube    = true;
+	$scope.boolVimeo      = true;
+	$scope.boolSoundcloud = true;
+	$scope.boolMp3        = true;
+
+	$scope.startYoutube = function(source) {
+		if ($scope.boolYoutube===true){
+			musicInstance = null;
+			musicInstance = Popcorn.youtube("#youtubeMusic", source);
+			$scope.boolYoutube = false;
+			return;
+		}
+	}
+	$scope.startVimeo = function(source) {
+		if ($scope.boolVimeo===true){
+			musicInstance = null;
+			musicInstance = Popcorn.vimeo("#vimeoMusic", source);
+			$scope.boolVimeo = false;
+			return;
+		}	
+	}
+	$scope.startSoundcloud = function(source) {
+		if ($scope.boolSoundcloud===true){
+			musicInstance = null;
+			musicInstance = Popcorn.soundcloud("#soundcloudMusic",
+				source.replace("https", "http")
+			);
+			$scope.boolSoundcloud = false;
+			return;
+		}
+	}
+	$scope.startMp3 = function() {
+		if ($scope.boolMp3===true){
+			musicInstance = null;
+			musicInstance = Popcorn.smart("#mp3Music");
+			$scope.boolMp3 = false;
+			return;
+		}
+	}
 }
 function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
+	musicInstance = null;
 	var xsrf = {
 		id: $routeParams.id,
 	};
@@ -89,6 +176,7 @@ function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 	});
 }
 function MusicNextCtrl($scope, $http, $location) {
+	musicInstance = null;
 	$http({
 	    method: 'GET',
 	    url: 'nextMusic'

@@ -20,6 +20,7 @@ class AddMusicHandler(webapp2.RequestHandler):
             play_count = 0
             )
     	dat.put()
+        memcache.set(str(dat.key().id()), dat)
         result = []
         result.append({
                 'id': str(dat.key().id())
@@ -31,7 +32,7 @@ class GetMusicListHandler(webapp2.RequestHandler):
     def get(self):
         q = Music.all()
         q.order("-date")
-        fetched = q.fetch(20)
+        fetched = q.fetch(10)
         result = []
         for p in fetched:
             result.append({

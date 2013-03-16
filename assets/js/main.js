@@ -2,58 +2,26 @@
 * @_prompto
 */
 
-function submitSongToServer() {
-	// HTML5 form, http://www.html5rocks.com/en/tutorials/forms/html5forms/
-	var form = new FormData();
-	
-	var selectElement = document.getElementById("sourceType");
-	var type = selectElement.options[selectElement.selectedIndex].value;
-	form.append("type", type);
-	var name = document.getElementById("musicName");
-	form.append("name", name.value);
-	var source = document.getElementById("musicSource");
-	form.append("source", source.value);
+//-------------------globals-------------------------
+var musicInstance = null;
+var shouldPlayMusic = true;
+var duration = 0.0;
+var currentTime = 0.0;
 
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "/addMusic"); 
-	xhr.send(form);
-	//console.log(source.value);
-}
-
-function showSongList() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', "/getMusicList", true);
-	xhr.onload = function() {
-		var results = JSON.parse(this.responseText);
-		console.log(results);
-		//alert(results);
-		var domElement = document.getElementById("musicList");
-
-	}
-	xhr.send()
-}
-
-function Songchirp() {
-	this.startProgram = function() {
-		
-	};
-}
-
+// ------------------functions-----------------------
 (function(){
-	var program = new Songchirp();
-	program.startProgram();
 }());
 
 window.onload = function() {
-	
 };
 
-
-function runProgressbar() {
-	var progressbarElement = document.getElementById("loadingBar");
-	progressbarElement.value += 1;
-}
-
+// utils
+window.requestAnimFrame = (function () {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+	function ( /* function */ callback, /* DOMElement */ element) {
+	  window.setTimeout(callback, 1000 / 60);
+	};
+})();
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
     var match = url.match(regExp);
@@ -63,7 +31,6 @@ function youtube_parser(url) {
         return null;
     }
 }
-
 <!-- http://stackoverflow.com/questions/3452546/javascript-regex-how-to-get-youtube-video-id-from-url -->
 function IDForMedia(pastedData) {
 	var success = false;
@@ -72,13 +39,13 @@ function IDForMedia(pastedData) {
 	    if (pastedData.match('embed')) { youtube_id = pastedData.split(/embed\//)[1].split('"')[0]; }
 	    else { youtube_id = pastedData.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0]; }
 	    media.type  = "youtube";
-	    media.id    = youtube_id;
+	    media.id    = "http://www.youtube.com/watch?v="+youtube_id;
 	    success = true;
 	}
 	else if (pastedData.match('http://(player.)?vimeo\.com')) {
 	    vimeo_id = pastedData.split(/video\/|http:\/\/vimeo\.com\//)[1].split(/[?&]/)[0];
 	    media.type  = "vimeo";
-	    media.id    = vimeo_id;
+	    media.id    = "http://player.vimeo.com/video/"+vimeo_id;
 	    success = true;
 	}
 	else if (pastedData.match('https://(www.)?soundcloud\.com')) {
