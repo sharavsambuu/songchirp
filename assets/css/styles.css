@@ -1,0 +1,14 @@
+.visible-true {
+	visibility : hidden;
+}
+
+#scanline {
+    position: absolute;        
+    top: 165px;
+    width: 358px;
+    height: 300px;
+    border: 1px solid black;
+    z-index: 5;
+    background-image:url("http://dl.dropbox.com/u/3482121/app/html5/webgl/effect/scanline/css/ov6.png");
+    background-repeat:repeat;
+}

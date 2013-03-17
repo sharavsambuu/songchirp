@@ -62,6 +62,9 @@ function MusicCtrl($scope, $http) {
 }
 
 function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
+	$scope.isLoading = true;
+	$scope.progress = 0;
+
 	musicInstance = null;
 	shouldPlayMusic = true;
 
@@ -70,8 +73,8 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 		if (shouldPlayMusic) {
 			if (musicInstance) {
 				var temp = musicInstance.duration();
-				if (temp){
-					if (temp>0){
+				if (temp) {
+					if (temp>0) {
 						console.log("we need to play music...");
 						musicInstance.play();
 						shouldPlayMusic = false;			
@@ -82,15 +85,19 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 		if (musicInstance) {
 			duration = musicInstance.duration();
 			currentTime = musicInstance.currentTime();
+			$scope.progress = Math.floor((currentTime * 100)/duration);
+			if (currentTime>0) {
+				$scope.isLoading = false;
+			}
 			if (duration>0&&(duration-currentTime)<0.5) {
 				$location.path('/next');
 			}
 		}
-		document.getElementById("debug").innerHTML = currentTime+" : "+duration
+		//document.getElementById("debug").innerHTML = currentTime+" : "+duration
 		
-		myTimeout = $timeout($scope.onTimeout, 3000);
+		myTimeout = $timeout($scope.onTimeout, 500);
 	}
-	var myTimeout = $timeout($scope.onTimeout, 3000);
+	var myTimeout = $timeout($scope.onTimeout, 500);
 	$scope.stopTimout = function() {
 		$timeout.cancel(myTimeout);
 	}

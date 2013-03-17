@@ -12,24 +12,26 @@
 	  </div>
 	</div>
 </div>
+
 <div class="row">
 	<div ng-repeat="music in musicList">
 		<a class="btn btn-large btn-warning" href="#/next"><i class="icon-forward"></i>  Next</a> 
 		<img ng-src="assets/img/{{music.type}}.png"/> <a href="#/music/{{music.id}}"><b> {{music.name}}</b></a> 
 		<span>{{music.play_count}} times played</span><br/><br/>
-		<div ng-switch on="music.type" >
+		<div ng-switch on="music.type" class="visible-{{isLoading}}">
+			<div class="progress progress-striped active">
+				<div class="bar" style="width: {{progress}}%;"></div>
+			</div>
 	        <div ng-switch-when="youtube">
-	        	<!--<iframe width="420" height="315" src="http://www.youtube.com/embed/{{music.source}}?autoplay=1" frameborder="0" allowfullscreen></iframe>-->
-	        	<div id="youtubeMusic" style="width: 360px; height: 300px;" ></div>
+	        	<div id="youtubeMusic" style="width: 360px; height: 300px; z-index: -5;" ></div>
+	        	<div id="scanline"></div>
 				{{startYoutube(music.source)}}
 	        </div>
 	        <div ng-switch-when="vimeo">
-	        	<!--<iframe src="http://player.vimeo.com/video/{{music.source}}?autoplay=1" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>-->
 	        	<div id="vimeoMusic" style="width: 360px; height: 300px;" ></div>
 				{{startVimeo(music.source)}}
 	        </div>
 	        <div ng-switch-when="soundcloud">
-	        	<!--<iframe width="100%" height="200" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url={{music.source}}&show_artwork=true&auto_play=true"></iframe>-->
 	        	<div id="soundcloudMusic" style="width: 100%; height: 200px;"></div>
 				{{startSoundcloud(music.source)}}
 	        </div>
@@ -40,11 +42,11 @@
 				{{startMp3()}}
 			</div>
     	</div>
-    	{{time.now}}
+    	<div style="position : absolute; top: 150px;" class="visible-{{!isLoading}}">
+    		<img src="assets/img/loading.gif"/>
+    	</div>
     	<!--
     	<a class="btn" href="#/music/delete/{{music.id}}">delete</a>
     	-->
-    </div>
-    <br/>
-    <span id="debug">debug...</span>
+    </div><br/>
 </div>

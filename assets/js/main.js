@@ -84,7 +84,7 @@ config(function($routeProvider) {
 		when('/music', {controller:MusicCtrl, templateUrl:'templates/music.html'}).
 		when('/music/:id', {controller:MusicViewCtrl, templateUrl:'templates/musicview.html'}).
 		when('/music/delete/:id', {controller:MusicDeleteCtrl, templateUrl:'templates/music.html'}).
-		when('/next', {controller:MusicNextCtrl, templateUrl:'templates/musicview.html'}).
+		when('/next', {controller:MusicNextCtrl, templateUrl:'templates/next.html'}).
 		when('/about', {controller:MusicCtrl, templateUrl:'templates/about.html'}).
 		otherwise({redirectTo:'/'});
 });
