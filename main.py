@@ -12,7 +12,9 @@ app = webapp2.WSGIApplication([
     ('/getMusic', ajax.GetMusicHandler),
     ('/deleteMusic', ajax.DeleteMusicHandler),
     ('/nextMusic', ajax.NextMusicHandler),
-    ('/reportBrokenMusic', ajax.BrokenMusicHandler)
+    ('/reportBrokenMusic', ajax.BrokenMusicHandler),
+    ('/generateMusicQueue', ajax.GenerateQueueHandler),
+    ('/getRandomMusicQueue', ajax.GetRandomQueueHandler)
 ], debug=True)
 
 

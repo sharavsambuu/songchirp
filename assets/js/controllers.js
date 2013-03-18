@@ -73,6 +73,14 @@ function CreateCtrl($scope, $http, $location) {
 			//console.log(data);
 		});
 	}
+
+	$scope.generateMusicQueue = function(){
+		$http({
+		    method: 'POST',
+		    url: 'generateMusicQueue'
+		}).success(function (data) {
+		});		
+	}
 }
 
 function MusicCtrl($scope, $http) {
@@ -211,12 +219,33 @@ function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 function MusicNextCtrl($scope, $http, $location) {
 	musicInstance = null;
 	shouldPlayMusic = true;
-	$http({
-	    method: 'GET',
-	    url: 'nextMusic'
-	}).success(function (data) {
-		$location.path('/music/'+data[0]["id"]);
-	});
+	if (musicQueue.length==0) {
+		$http({
+		    method: 'GET',
+		    url: 'getRandomMusicQueue'
+		}).success(function (data) {
+			//$location.path('/music/'+data[0]["id"]);
+			var arr = data[0]["music_list"];
+			if (arr) {
+				for (var i=0; i<arr.length; i++) {
+					musicQueue.push(arr[i]);
+				}	
+			}
+			var musicId = musicQueue.pop();
+			console.log("queue length : "+musicQueue.length);
+			console.log("history length : "+playHistory.length);
+			console.log("selected music id :"+musicId);
+			playHistory.push(musicId);
+			$location.path('/music/'+Number(musicId));
+		});		
+	} else {
+		var musicId = musicQueue.pop();
+		console.log("queue length : "+musicQueue.length);
+		console.log("history length : "+playHistory.length);
+		console.log("selected music id :"+musicId);
+		playHistory.push(musicId);
+		$location.path('/music/'+Number(musicId));
+	}
 }
 function MusicViewNextCtrl($scope, $http, $location) {
 	$scope.nextMusic = function(){

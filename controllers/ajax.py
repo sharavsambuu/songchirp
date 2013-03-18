@@ -141,3 +141,57 @@ class BrokenMusicHandler(webapp2.RequestHandler):
                 })
         json_string = json.dumps(result)
         self.response.write(json_string)
+
+
+class GenerateQueueHandler(webapp2.RequestHandler):
+    def post(self):
+        query = Music.all(keys_only=True)
+        music_list = []
+        for i in range(0,10):
+            selected_key = None
+            n = 0
+            for key in query:
+                if random.randint(0, n)==0:
+                    selected_key = key
+                n += 1
+
+            p = None
+            if selected_key is None:
+                local_query = Music.all()
+                results = local_query.fetch(1)
+                for result in results:
+                    p = result
+            else:
+                p = Music.get(selected_key)
+            music_list.append(p.key().id())
+        queue = MusicQueue(music_list = music_list)
+        queue.put()
+        logging.warning('YEAH IM GENERATING MUSIC QUEUE')
+        pass
+
+class GetRandomQueueHandler(webapp2.RequestHandler):
+    def get(self):
+        query = MusicQueue.all(keys_only=True)
+        selected_key = None
+        n = 0
+        for key in query:
+            if random.randint(0, n)==0:
+                selected_key = key
+            n += 1
+        p = None
+        if selected_key is None:
+            local_query = MusicQueue.all()
+            results = local_query.fetch(1)
+            for result in results:
+                p = result
+        else:
+            p = MusicQueue.get(selected_key)
+        result = []
+        result.append({
+                'music_list': p.music_list
+            });
+        json_string = json.dumps(result)
+        self.response.write(json_string)
+        pass
+    pass
+        

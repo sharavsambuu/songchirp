@@ -16,7 +16,7 @@
 <div class="row">
 	<div ng-repeat="music in musicList">
 		<div ng-controller="MusicViewNextCtrl">
-			<a class="btn btn-large btn-warning" ng-click="nextMusic()"><i class="icon-forward"></i>  Next</a> 
+			<a class="btn btn-large btn-warning" href="#/next"><i class="icon-forward"></i>  Next</a>
 			<img ng-src="assets/img/{{music.type}}.png"/> <a href="#/music/{{music.id}}"><b> {{music.name}}</b></a> 
 			<span>{{music.play_count}} times played</span> 
 		</div>

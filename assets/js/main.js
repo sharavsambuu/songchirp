@@ -7,6 +7,8 @@ var musicInstance = null;
 var shouldPlayMusic = true;
 var duration = 0.0;
 var currentTime = 0.0;
+var playHistory = [];
+var musicQueue = [];
 
 // ------------------functions-----------------------
 (function(){

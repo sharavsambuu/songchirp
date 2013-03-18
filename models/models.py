@@ -10,4 +10,8 @@ class Music(db.Model):
 	play_count = db.IntegerProperty()
 	date = db.DateTimeProperty(auto_now_add=True)
 
+class MusicQueue(db.Model):
+	music_list = db.ListProperty(long)
+	date = db.DateTimeProperty(auto_now_add=True)
+
 
