@@ -15,9 +15,12 @@
 
 <div class="row">
 	<div ng-repeat="music in musicList">
-		<a class="btn btn-large btn-warning" href="#/next"><i class="icon-forward"></i>  Next</a> 
-		<img ng-src="assets/img/{{music.type}}.png"/> <a href="#/music/{{music.id}}"><b> {{music.name}}</b></a> 
-		<span>{{music.play_count}} times played</span><br/><br/>
+		<div ng-controller="MusicViewNextCtrl">
+			<a class="btn btn-large btn-warning" ng-click="nextMusic()"><i class="icon-forward"></i>  Next</a> 
+			<img ng-src="assets/img/{{music.type}}.png"/> <a href="#/music/{{music.id}}"><b> {{music.name}}</b></a> 
+			<span>{{music.play_count}} times played</span> 
+		</div>
+		<br/>
 		<div ng-switch on="music.type" class="visible-{{isLoading}}">
 			<div class="progress progress-striped active">
 				<div class="bar" style="width: {{progress}}%;"></div>
@@ -45,8 +48,23 @@
     	<div style="position : absolute; top: 150px;" class="visible-{{!isLoading}}">
     		<img src="assets/img/loading.gif"/>
     	</div>
+    	<br/>
+    	<div style="position : absolute; top: 500px;" ng-controller="MusicBrokenCtrl">
+			<button class="btn btn-danger" ng-click="report(music.id)">Report it {{brokenReportCount}}</button>
+			If music doesn't play you can report it and then just press Next button. 
+		</div>
     	<!--
     	<a class="btn" href="#/music/delete/{{music.id}}">delete</a>
     	-->
     </div><br/>
 </div>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-39358647-1', 'songchirp.appspot.com');
+	ga('send', 'pageview');
+</script>

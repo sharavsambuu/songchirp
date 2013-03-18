@@ -3,7 +3,7 @@
 import webapp2, json, logging
 from models.models import *
 import random
-from google.appengine.api import memcache
+#from google.appengine.api import memcache
 
 class AddMusicHandler(webapp2.RequestHandler):
     def post(self):
@@ -20,13 +20,35 @@ class AddMusicHandler(webapp2.RequestHandler):
             play_count = 0
             )
     	dat.put()
-        memcache.set(str(dat.key().id()), dat)
+        #memcache.set(str(dat.key().id()), dat)
         result = []
         result.append({
                 'id': str(dat.key().id())
             });
         json_string = json.dumps(result)
         self.response.write(json_string)
+
+class SearchMusicHandler(webapp2.RequestHandler):
+    def post(self):
+        searchValue = str(self.request.get('searchValue'))
+        q = Music.all().filter('name >=', searchValue).filter('name <', searchValue+u'\uFFFD')
+        #q.filter('name =', searchValue)
+        #q.order("-date")
+        fetched = q.fetch(10)
+        result = []
+        for p in fetched:
+            result.append({
+                'id':str(p.key().id()),
+                'type':p.sourceType,
+                'name':p.name,
+                'source':p.source,
+                'play_count':p.play_count,
+                'report_count':p.broken_report_count,
+                'date':str(p.date)
+                })
+        json_string = json.dumps(result)
+        self.response.write(json_string)
+        pass
 
 class GetMusicListHandler(webapp2.RequestHandler):
     def get(self):
@@ -49,12 +71,13 @@ class GetMusicListHandler(webapp2.RequestHandler):
 class GetMusicHandler(webapp2.RequestHandler):
     def post(self):
         entity_id= str(self.request.get('id'))
-        p = memcache.get(entity_id)
-        if p is None:
-            p = Music.get_by_id(int(entity_id))
+        #p = memcache.get(entity_id)
+        #if p is None:
+        #    p = Music.get_by_id(int(entity_id))
+        p = Music.get_by_id(int(entity_id))
         p.play_count += 1
         p.put()
-        memcache.set(str(p.key().id()), p)
+        #memcache.set(str(p.key().id()), p)
         result = []
         result.append({
                 'id':str(p.key().id()),
@@ -98,6 +121,23 @@ class NextMusicHandler(webapp2.RequestHandler):
         result = []
         result.append({
                 'id':str(p.key().id())
+                })
+        json_string = json.dumps(result)
+        self.response.write(json_string)
+
+class BrokenMusicHandler(webapp2.RequestHandler):
+    def post(self):
+        entity_id= str(self.request.get('id'))
+        p = Music.get_by_id(int(entity_id))
+        if p.broken_report_count is None:
+            p.broken_report_count = 0
+            p.put()    
+        p.broken_report_count += 1
+        p.put()
+        #logging.warning("ID : %s, Count : %s", entity_id, str(p.broken_report_count))
+        result = []
+        result.append({
+                'report_count':p.broken_report_count,
                 })
         json_string = json.dumps(result)
         self.response.write(json_string)

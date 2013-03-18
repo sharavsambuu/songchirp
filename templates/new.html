@@ -15,15 +15,26 @@
 
 <div class="row">
 	<center>
-	<form ng-submit="submitMusic()">
-		<select name="type" ng-model="musicType" ng-options="musicType for musicType in musicTypes"></select><br/>
-		<input  name="name" type="text" ng-model="musicName" size="30" placeholder="music name..." required ><br/>
-		<textarea name="musicSource" type="text" ng-model="musicSource" placeholder="music link..." required ></textarea><br/>
-		<input class="btn-primary" type="submit" value="add">
-	</form>
-	<br/>
-	{{musicType | json}}<br/>
-	{{musicName | json}}<br/>
-	{{musicSource |json}}<br/>
+		<form ng-submit="submitMusic()">
+			<select name="type" ng-model="musicType" ng-options="musicType for musicType in musicTypes"></select><br/>
+			<input  name="name" type="text" ng-model="musicName" size="30" placeholder="music name..." required ><br/>
+			<textarea name="musicSource" type="text" ng-model="musicSource" placeholder="music link..." required ></textarea><br/>
+			<input class="btn-primary" type="submit" value="add">
+		</form>
+		<br/>
+		{{musicType | json}}<br/>
+		{{musicName | json}}<br/>
+		{{musicSource | json}}<br/>
 	</center>
+	<br/><br/><br/>
+	<form ng-submit="searchMusic()">
+		<input type="text" ng-model="searchText" size="60" placeholder="search value..."/>
+		<input type="submit">
+	</form>
+	<!--<a class="btn" ng-click="searchMusic()">Fetch</a><br/>
+	<input type="text" ng-model="searchText" size="60" placeholder="search value..."/>-->
+	<div ng-repeat="music in musicList">
+		{{music.name}}<br/>
+	</div>
+
 </div>

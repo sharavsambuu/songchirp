@@ -7,10 +7,12 @@ from controllers import mainhandle, ajax
 app = webapp2.WSGIApplication([
     ('/', mainhandle.MainHandler),
     ('/addMusic', ajax.AddMusicHandler),
+    ('/searchMusic', ajax.SearchMusicHandler),
     ('/getMusicList', ajax.GetMusicListHandler),
     ('/getMusic', ajax.GetMusicHandler),
     ('/deleteMusic', ajax.DeleteMusicHandler),
-    ('/nextMusic', ajax.NextMusicHandler)
+    ('/nextMusic', ajax.NextMusicHandler),
+    ('/reportBrokenMusic', ajax.BrokenMusicHandler)
 ], debug=True)
 
 

@@ -11,6 +11,7 @@
 
 function CreateCtrl($scope, $http, $location) {
 	musicInstance = null;
+	shouldPlayMusic = true;
 	$scope.musicTypes = [
 		"youtube, soundcloud, vimeo",
 		"mp3"
@@ -47,14 +48,36 @@ function CreateCtrl($scope, $http, $location) {
 			$scope.musicType = $scope.musicTypes[0];
 			$scope.musicName = "";
 			$scope.musicSource = "";
-			//console.log(data[0]["id"]);
 			$location.path('/music/'+data[0]["id"]);
+		});
+	}
+
+	$scope.searchMusic = function() {
+		var xsrf = {
+			searchValue: $scope.searchText,
+		};
+		$http({
+		    method: 'POST',
+		    url: 'searchMusic',
+		    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		    transformRequest: function(obj) {
+		        var str = [];
+		        for(var p in obj)
+		        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+		        return str.join("&");
+		    },
+		    data: xsrf
+		}).success(function (data) {
+			$scope.musicList = data;
+			//$scope.searchText = "";
+			//console.log(data);
 		});
 	}
 }
 
 function MusicCtrl($scope, $http) {
 	musicInstance = null;
+	shouldPlayMusic = true;
 	$scope.musicList = [];
 	$http.get('getMusicList').success(function(data){
 		$scope.musicList = data;
@@ -73,7 +96,7 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 		if (shouldPlayMusic) {
 			if (musicInstance) {
 				var temp = musicInstance.duration();
-				if (temp) {
+				if (temp && !isNaN(temp)) {
 					if (temp>0) {
 						console.log("we need to play music...");
 						musicInstance.play();
@@ -85,19 +108,21 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 		if (musicInstance) {
 			duration = musicInstance.duration();
 			currentTime = musicInstance.currentTime();
-			$scope.progress = Math.floor((currentTime * 100)/duration);
-			if (currentTime>0) {
-				$scope.isLoading = false;
-			}
-			if (duration>0&&(duration-currentTime)<0.5) {
-				$location.path('/next');
+			if (!isNaN(duration) && !isNaN(currentTime)){
+				$scope.progress = Math.floor((currentTime * 100)/duration);
+				if (currentTime>0) {
+					$scope.isLoading = false;
+				}
+				if (duration>0&&(duration-currentTime)<0.5) {
+					$location.path('/next');
+				}
 			}
 		}
 		//document.getElementById("debug").innerHTML = currentTime+" : "+duration
 		
-		myTimeout = $timeout($scope.onTimeout, 500);
+		myTimeout = $timeout($scope.onTimeout, 1500);
 	}
-	var myTimeout = $timeout($scope.onTimeout, 500);
+	var myTimeout = $timeout($scope.onTimeout, 1500);
 	$scope.stopTimout = function() {
 		$timeout.cancel(myTimeout);
 	}
@@ -164,6 +189,7 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 }
 function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 	musicInstance = null;
+	shouldPlayMusic = true;
 	var xsrf = {
 		id: $routeParams.id,
 	};
@@ -184,12 +210,48 @@ function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 }
 function MusicNextCtrl($scope, $http, $location) {
 	musicInstance = null;
+	shouldPlayMusic = true;
 	$http({
 	    method: 'GET',
 	    url: 'nextMusic'
 	}).success(function (data) {
 		$location.path('/music/'+data[0]["id"]);
-	});	
+	});
+}
+function MusicViewNextCtrl($scope, $http, $location) {
+	$scope.nextMusic = function(){
+		musicInstance = null;
+		shouldPlayMusic = true;
+		$http({
+		    method: 'GET',
+		    url: 'nextMusic'
+		}).success(function (data) {
+			$location.path('/music/'+data[0]["id"]);
+		});		
+	}
+}
+
+function MusicBrokenCtrl($scope, $http) {
+	$scope.brokenReportCount = 0;
+	$scope.report = function(musicId) {
+		var xsrf = {
+			id: musicId
+		};
+		$http({
+		    method: 'POST',
+		    url: 'reportBrokenMusic',
+		    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		    transformRequest: function(obj) {
+		        var str = [];
+		        for(var p in obj)
+		        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+		        return str.join("&");
+		    },
+		    data: xsrf
+		}).success(function (data) {
+			$scope.brokenReportCount = Number(data[0]["report_count"]);
+		});
+	}
 }
 
 function AboutCtrl($scope) {
