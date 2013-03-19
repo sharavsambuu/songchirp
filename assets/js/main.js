@@ -24,6 +24,18 @@ window.requestAnimFrame = (function () {
 	  window.setTimeout(callback, 1000 / 60);
 	};
 })();
+
+Array.prototype.shuffle = function() {
+ 	var len = this.length;
+	var i = len;
+	 while (i--) {
+	 	var p = parseInt(Math.random()*len);
+		var t = this[i];
+  	this[i] = this[p];
+  	this[p] = t;
+ 	}
+};
+
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
     var match = url.match(regExp);

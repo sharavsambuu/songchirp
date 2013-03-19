@@ -147,7 +147,7 @@ class GenerateQueueHandler(webapp2.RequestHandler):
     def post(self):
         query = Music.all(keys_only=True)
         music_list = []
-        for i in range(0,10):
+        for i in range(0,20):
             selected_key = None
             n = 0
             for key in query:

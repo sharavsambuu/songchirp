@@ -8,6 +8,9 @@
 		return time;
 	});*/
 
+// enabling cookie functionality to the my app
+//angular.module('songchirp', ['ngCookies']);
+
 
 function CreateCtrl($scope, $http, $location) {
 	musicInstance = null;
@@ -86,6 +89,10 @@ function CreateCtrl($scope, $http, $location) {
 function MusicCtrl($scope, $http) {
 	musicInstance = null;
 	shouldPlayMusic = true;
+	/*window.cookies = $cookies;
+	$cookies.a = "Sharavsambuu"
+	$scope.cookieValue = $cookies;
+	console.log($cookies);*/
 	$scope.musicList = [];
 	$http.get('getMusicList').success(function(data){
 		$scope.musicList = data;
@@ -121,7 +128,10 @@ function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
 				if (currentTime>0) {
 					$scope.isLoading = false;
 				}
-				if (duration>0&&(duration-currentTime)<0.5) {
+				var dt = (duration-currentTime);
+				//console.log(duration+"/"+currentTime);
+				if (duration>0 && dt<1.5) {
+					console.log(dt);
 					$location.path('/next');
 				}
 			}
@@ -231,6 +241,7 @@ function MusicNextCtrl($scope, $http, $location) {
 					musicQueue.push(arr[i]);
 				}	
 			}
+			musicQueue.shuffle();
 			var musicId = musicQueue.pop();
 			console.log("queue length : "+musicQueue.length);
 			console.log("history length : "+playHistory.length);
@@ -239,6 +250,7 @@ function MusicNextCtrl($scope, $http, $location) {
 			$location.path('/music/'+Number(musicId));
 		});		
 	} else {
+		musicQueue.shuffle();
 		var musicId = musicQueue.pop();
 		console.log("queue length : "+musicQueue.length);
 		console.log("history length : "+playHistory.length);
