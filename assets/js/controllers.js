@@ -236,6 +236,7 @@ function MusicNextCtrl($scope, $http, $location) {
 		}).success(function (data) {
 			//$location.path('/music/'+data[0]["id"]);
 			var arr = data[0]["music_list"];
+			console.log(arr);
 			if (arr) {
 				for (var i=0; i<arr.length; i++) {
 					musicQueue.push(arr[i]);
@@ -247,7 +248,7 @@ function MusicNextCtrl($scope, $http, $location) {
 			console.log("history length : "+playHistory.length);
 			console.log("selected music id :"+musicId);
 			playHistory.push(musicId);
-			$location.path('/music/'+Number(musicId));
+			$location.path('/music/'+musicId);
 		});		
 	} else {
 		musicQueue.shuffle();
@@ -256,7 +257,7 @@ function MusicNextCtrl($scope, $http, $location) {
 		console.log("history length : "+playHistory.length);
 		console.log("selected music id :"+musicId);
 		playHistory.push(musicId);
-		$location.path('/music/'+Number(musicId));
+		$location.path('/music/'+musicId);
 	}
 }
 function MusicViewNextCtrl($scope, $http, $location) {
@@ -296,4 +297,8 @@ function MusicBrokenCtrl($scope, $http) {
 }
 
 function AboutCtrl($scope) {
+}
+
+function AutomatMusicCtrl($scope) {
+	
 }

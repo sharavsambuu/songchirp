@@ -3,6 +3,12 @@
 import webapp2, json, logging
 from models.models import *
 import random
+import gdata.youtube
+import gdata.youtube.service
+
+client = gdata.youtube.service.YouTubeService()
+query = gdata.youtube.service.YouTubeVideoQuery()
+
 #from google.appengine.api import memcache
 
 class AddMusicHandler(webapp2.RequestHandler):
@@ -186,9 +192,12 @@ class GetRandomQueueHandler(webapp2.RequestHandler):
                 p = result
         else:
             p = MusicQueue.get(selected_key)
+        temp_music_list = []
+        for i in p.music_list:
+            temp_music_list.append(str(i))
         result = []
         result.append({
-                'music_list': p.music_list
+                'music_list': temp_music_list
             });
         json_string = json.dumps(result)
         self.response.write(json_string)

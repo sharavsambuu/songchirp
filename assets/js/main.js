@@ -100,5 +100,6 @@ config(function($routeProvider) {
 		when('/music/delete/:id', {controller:MusicDeleteCtrl, templateUrl:'templates/music.html'}).
 		when('/next', {controller:MusicNextCtrl, templateUrl:'templates/next.html'}).
 		when('/about', {controller:MusicCtrl, templateUrl:'templates/about.html'}).
+		when('/automat', {controller:AutomatMusicCtrl, templateUrl:'templates/automat.html'}).
 		otherwise({redirectTo:'/'});
 });
