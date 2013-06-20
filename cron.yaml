@@ -1,0 +1,8 @@
+cron:
+- description: generate random queue
+  url: /generateMusicQueue
+  schedule: every 8 hours
+
+#- description: my test cron
+#  url: /testcron
+#  schedule: every 1 hours

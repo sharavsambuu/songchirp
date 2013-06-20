@@ -5,10 +5,10 @@ from models.models import *
 import random
 import gdata.youtube
 import gdata.youtube.service
-
-client = gdata.youtube.service.YouTubeService()
-query = gdata.youtube.service.YouTubeVideoQuery()
-
+from pyechonest import config
+config.ECHO_NEST_API_KEY=""
+from pyechonest import playlist
+from pyechonest import artist
 #from google.appengine.api import memcache
 
 class AddMusicHandler(webapp2.RequestHandler):
@@ -73,6 +73,11 @@ class GetMusicListHandler(webapp2.RequestHandler):
                 })
         json_string = json.dumps(result)
         self.response.write(json_string)
+
+class TotalNumberofSongsHandler(webapp2.RequestHandler):
+    def get(self):
+        count = Music.all(keys_only=True).count()
+        self.response.write(str(count))
 
 class GetMusicHandler(webapp2.RequestHandler):
     def post(self):
@@ -150,6 +155,28 @@ class BrokenMusicHandler(webapp2.RequestHandler):
 
 
 class GenerateQueueHandler(webapp2.RequestHandler):
+    def get(self):
+        query = Music.all(keys_only=True)
+        music_list = []
+        for i in range(0,20):
+            selected_key = None
+            n = 0
+            for key in query:
+                if random.randint(0, n)==0:
+                    selected_key = key
+                n += 1
+            p = None
+            if selected_key is None:
+                local_query = Music.all()
+                results = local_query.fetch(1)
+                for result in results:
+                    p = result
+            else:
+                p = Music.get(selected_key)
+            music_list.append(p.key().id())
+        queue = MusicQueue(music_list = music_list)
+        queue.put()
+        pass
     def post(self):
         query = Music.all(keys_only=True)
         music_list = []
@@ -172,7 +199,6 @@ class GenerateQueueHandler(webapp2.RequestHandler):
             music_list.append(p.key().id())
         queue = MusicQueue(music_list = music_list)
         queue.put()
-        logging.warning('YEAH IM GENERATING MUSIC QUEUE')
         pass
 
 class GetRandomQueueHandler(webapp2.RequestHandler):
@@ -204,3 +230,60 @@ class GetRandomQueueHandler(webapp2.RequestHandler):
         pass
     pass
         
+class SearchYoutubeHandler(webapp2.RequestHandler):
+    def post(self):
+        search_value= str(self.request.get('searchValue'))
+        #query.vq = search_value
+        #query.max_results = 1
+        #query.start_index = 1
+        #query.racy = "exclude"
+        #query.format = "5"
+        #query.orderby = "relevance"
+        #feed = client.YouTubeQuery(query)
+        #for entry in feed.entry:
+        #    logging.warning(entry.GetSwfUrl())
+        #logging.warning(search_value)
+    
+        #p = playlist.Playlist(type='artist-radio', artist=search_value)
+        #if p is None:
+        #    logging.warning("Cannot create playlist")        
+        #sid = p.session_id
+        #song = p.get_next_songs()
+        #youtube_search_string = str(song.artist_name)+" - "+str(song.title)
+        #youtube_search_string = search_value
+        
+        yt_service = gdata.youtube.service.YouTubeService()
+        yt_service.ssl = False
+        #query = gdata.youtube.service.YouTubeVideoQuery()
+        #query.vq = youtube_search_string
+        #query.orderby = 'relevance' # might want to change this
+        #query.racy = 'include' # feelin' racy
+        #feed = yt_service.YouTubeQuery(query)
+        
+        #result = feed.entry[0]
+        #embed_url = result.split("&")[0].replace("watch?v=","v/")
+        #embed_url = result.GetSwfUrl()
+        
+        p = playlist.static(type="artist-radio", artist=search_value)
+        songs = []
+        for song in p:
+            #query = gdata.youtube.service.YouTubeVideoQuery()
+            #query.vq = song.artist_name+" - "+song.title
+            #query.orderby = 'relevance'
+            #query.racy = 'include'
+            #feed = yt_service.YouTubeQuery(query)
+            #result = feed.entry[0]
+            #embed_url = result.GetSwfUrl()
+            songs.append({"artist":song.artist_name,"title":song.title})
+
+        ajaxresult = []
+        ajaxresult.append({
+                'songs' : songs
+            });
+        json_string = json.dumps(ajaxresult)
+        self.response.write(json_string)
+
+class TestCronHandler(webapp2.RequestHandler):
+    def get(self):
+        logging.warning("Test CRON is WORKING from get")
+        pass

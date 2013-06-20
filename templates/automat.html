@@ -6,7 +6,7 @@
 			<ul class="nav">
 				<li><a href="#/music">Music</a></li>
 				<li><a href="#/new">Add</a></li>
-				<li class="active"><a href="#/automat">Automat</a></li>
+				<li class="active"><a href="#/automat">Automatique</a></li>
 				<li><a href="#/about">About</a></li>
 			</ul>
 	    </div>
@@ -14,15 +14,19 @@
 	</div>
 </div>
 <div class="row">
-	<a class="btn btn-large btn-warning" href="#/next"><i class="icon-play"></i> Play radio</a>
-	<br/>
-	<br/>
-	Recently added songs <br/>
-	<table class="table table-hover">
-		<tr ng-repeat="music in musicList">
-			<td><img ng-src="assets/img/{{music.type}}.png"/></td>
-			<td><a href="#/music/{{music.id}}"><b>{{music.name}}</b></a></td>
-		    <td>{{music.play_count}}</td>
-		</tr>
-	</table>
+	<p>This section can helps you to discover your favorite music, just enter your favorite band name</p>
+	<hr>
+	<form ng-submit="searchYoutubeMusic()">
+		<input type="text" ng-model="searchText" size="80" placeholder="band name..."/>
+	</form>
+	<hr>
+	<!--<div id="youtubeMusic" style="width: 360px; height: 300px; z-index: -5;" ></div>
+	<div id="scanline"></div>-->
+	Results :
+	<br/><br/>
+	<div ng-repeat="music in songs">
+		<a href="#/search/{{music.artist}}+" - "+{{music.title}}">{{music.artist}} - {{music.title}}</a>
+	</div>
+	<hr>
+	
 </div>

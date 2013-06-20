@@ -14,7 +14,10 @@ app = webapp2.WSGIApplication([
     ('/nextMusic', ajax.NextMusicHandler),
     ('/reportBrokenMusic', ajax.BrokenMusicHandler),
     ('/generateMusicQueue', ajax.GenerateQueueHandler),
-    ('/getRandomMusicQueue', ajax.GetRandomQueueHandler)
+    ('/getRandomMusicQueue', ajax.GetRandomQueueHandler),
+    ('/searchYoutubeMusic', ajax.SearchYoutubeHandler),
+    ('/totalNumberofSongs', ajax.TotalNumberofSongsHandler),
+    ('/testcron', ajax.TestCronHandler)
 ], debug=True)
 
 

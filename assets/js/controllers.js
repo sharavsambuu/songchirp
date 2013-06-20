@@ -93,10 +93,15 @@ function MusicCtrl($scope, $http) {
 	$cookies.a = "Sharavsambuu"
 	$scope.cookieValue = $cookies;
 	console.log($cookies);*/
+	//$scope.total = ;
 	$scope.musicList = [];
 	$http.get('getMusicList').success(function(data){
 		$scope.musicList = data;
 	});
+	/*
+	$http.get('totalNumberofSongs').success(function(data){
+		$scope.total = data;
+	});*/
 }
 
 function MusicViewCtrl($scope, $routeParams, $http, $timeout, $location) {
@@ -226,6 +231,26 @@ function MusicDeleteCtrl($scope, $routeParams, $http, $location) {
 		$location.path('/music');
 	});
 }
+function MusicEditCtrl($scope, $routeParams, $http, $location) {
+	var xsrf = {
+		id: $routeParams.id,
+	};
+	$http({
+	    method: 'POST',
+	    url: 'editMusic',
+	    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+	    transformRequest: function(obj) {
+	        var str = [];
+	        for(var p in obj)
+	        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	        return str.join("&");
+	    },
+	    data: xsrf
+	}).success(function (data) {
+		
+		//$location.path('/music');
+	});
+}
 function MusicNextCtrl($scope, $http, $location) {
 	musicInstance = null;
 	shouldPlayMusic = true;
@@ -299,6 +324,34 @@ function MusicBrokenCtrl($scope, $http) {
 function AboutCtrl($scope) {
 }
 
-function AutomatMusicCtrl($scope) {
-	
+function AutomatMusicCtrl($scope, $http) {
+	$scope.startYoutube = function(url) {
+
+	}
+	$scope.searchYoutubeMusic = function() {
+		var xsrf = {
+			searchValue: $scope.searchText,
+		};
+		$http({
+		    method: 'POST',
+		    url: 'searchYoutubeMusic',
+		    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		    transformRequest: function(obj) {
+		        var str = [];
+		        for(var p in obj)
+		        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+		        return str.join("&");
+		    },
+		    data: xsrf
+		}).success(function (data) {
+			console.log(data[0]["songs"]);
+			$scope.songs = data[0]["songs"];
+			//$scope.musicName = data[0]["name"]
+			//$scope.youtubeUrl = data[0]["embed_url"]
+			//$scope.startYoutube($scope.youtubeUrl);
+			//$scope.musicList = data;
+			//$scope.searchText = "";
+			//console.log(data);
+		});
+	}
 }
